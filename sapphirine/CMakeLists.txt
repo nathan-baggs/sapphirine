@@ -7,6 +7,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(capstone)
 
 add_library(sapphirine STATIC
+    src/clean.cpp
+    src/exception.cpp
+    src/file.cpp
     src/hello.cpp
 )
 add_library(sapphirine::sapphirine ALIAS sapphirine)
