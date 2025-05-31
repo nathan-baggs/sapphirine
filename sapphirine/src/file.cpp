@@ -13,12 +13,14 @@
 
 namespace sapphirine
 {
-File::File(const std::filesystem::path &path, CreationMode mode)
+File::File(const std::filesystem::path &path, CreationMode mode, std::uint32_t size)
     : handle_{INVALID_HANDLE_VALUE, ::CloseHandle}
     , mapping_{NULL, ::CloseHandle}
     , map_view_{nullptr, ::UnmapViewOfFile}
     , size_{}
 {
+    expect(mode == CreationMode::OPEN || size > 0, "size must be greater than 0 when creating a file");
+
     handle_.reset(
         ::CreateFileA(
             path.string().c_str(),
@@ -30,7 +32,7 @@ File::File(const std::filesystem::path &path, CreationMode mode)
             nullptr));
     ensure(handle_, "failed to open file");
 
-    mapping_.reset(::CreateFileMappingA(handle_, nullptr, PAGE_READWRITE, 0, 0, nullptr));
+    mapping_.reset(::CreateFileMappingA(handle_, nullptr, PAGE_READWRITE, 0, size, nullptr));
     ensure(mapping_, "failed to map file: {}", ::GetLastError());
 
     map_view_.reset(::MapViewOfFile(mapping_, FILE_MAP_ALL_ACCESS, 0, 0, 0));

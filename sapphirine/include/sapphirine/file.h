@@ -23,7 +23,7 @@ enum class CreationMode
 class File
 {
   public:
-    File(const std::filesystem::path &path, CreationMode mode = CreationMode::OPEN);
+    File(const std::filesystem::path &path, CreationMode mode = CreationMode::OPEN, std::uint32_t size = 0);
 
     auto as_string() const -> std::string_view;
     auto as_data() const -> std::span<const std::byte>;
